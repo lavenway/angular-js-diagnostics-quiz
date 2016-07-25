@@ -10,17 +10,20 @@
 		var JSONQuizData = [];
 		var JSONCorrectAnswers = [];
 		var JSONScoreDescription = [];
+		var JSONDiagnosticResult = [];
 
 		var dataObj = {
 			JSONQuizData: JSONQuizData,
 			JSONCorrectAnswers: JSONCorrectAnswers,
-			JSONScoreDescription: JSONScoreDescription
+			JSONScoreDescription: JSONScoreDescription,
+			JSONDiagnosticResult: JSONDiagnosticResult
 		};
 
     $http.get(urlBase).success(function(data) {
         dataObj.JSONQuizData = data.JSONQuizData,
         dataObj.JSONCorrectAnswers = data.JSONCorrectAnswers,
-        dataObj.JSONScoreDescription = data.JSONScoreDescription;
+        dataObj.JSONScoreDescription = data.JSONScoreDescription,
+        dataObj.JSONDiagnosticResult = data.JSONDiagnosticResult;
     });
 
   	return dataObj;

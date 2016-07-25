@@ -82,53 +82,77 @@
                                 </div>
 
                                 <div class="alert alert-danger"
-                                    ng-show="quiz.error">
-                                      You have not answered all of the questions!
-                                    <button class="close"
-                                      ng-click="quiz.error = false">
-                                      &times;
-                                    </button>
+                                     ng-show="quiz.error">
+                                  You have not answered all of the questions!
+                                  <button class="close"
+                                    ng-click="quiz.error = false">
+                                    &times;
+                                  </button>
                                 </div>
 
                                 <div class="question"
                                    ng-hide="quiz.finalise || quiz.feedback">
-                                  <p>{{quiz.dataService.JSONQuizData[quiz.activeQuestion].text}}</p>
+                                  <p>{{quiz.dataService.JSONQuizData[quiz.activeQuestion].titleText}}</p>
+                                  <img ng-if="quiz.dataService.JSONQuizData[quiz.activeQuestion].titleImage !== null"
+                                       ng-src="{{quiz.dataService.JSONQuizData[quiz.activeQuestion].titleImage}}">
                                 </div>
                                 
-                                <div class="answer-container" ng-hide="quiz.finalise || quiz.feedback">
-                                  <div class="answer-wrapper"
+                                <ul class="answer-container" ng-hide="quiz.finalise || quiz.feedback">
+
+                                  <li class="answer-wrapper"
                                     ng-if="quiz.dataService.JSONQuizData[quiz.activeQuestion].type === 'text'"
                                     ng-repeat="answer in quiz.dataService.JSONQuizData[quiz.activeQuestion].possibilities">
                                     <p class="answer text-answer"
                                       ng-class="{'bg-info': $index === quiz.dataService.JSONQuizData[quiz.activeQuestion].selected}">
+                                      <span>{{$index+1|character}}.</span>
                                       {{answer.answer}}
                                     </p>
                                     <button class="btn btn-warning"
                                       ng-click="quiz.questionAnswered() || quiz.selectAnswer($index)">
                                         Submit
                                     </button>
-                                  </div>
+                                  </li>
 
-                                  <div class="answer-wrapper"
+                                  <li class="answer-wrapper"
                                     ng-if="quiz.dataService.JSONQuizData[quiz.activeQuestion].type === 'image'"
                                     ng-repeat="answer in quiz.dataService.JSONQuizData[quiz.activeQuestion].possibilities">
                                     <p class="answer image-answer"
                                       ng-class="{'image-selected': $index === quiz.dataService.JSONQuizData[quiz.activeQuestion].selected}">
-                                      <img ng-src="{{answer.answer}}">
+                                      <img ng-src="{{answer.answerImage}}">
                                     </p>
                                     <button class="btn btn-warning"
                                       ng-click="quiz.questionAnswered() || quiz.selectAnswer($index)">
                                         Submit
                                     </button>
-                                  </div>
-                                </div>
+                                  </li>
+
+                                  <li class="answer-wrapper"
+                                    ng-if="quiz.dataService.JSONQuizData[quiz.activeQuestion].type === 'image-text'"
+                                    ng-repeat="answer in quiz.dataService.JSONQuizData[quiz.activeQuestion].possibilities">
+                                    <p class="answer imagetext-answer"
+                                      ng-class="{'imagetext-selected': $index === quiz.dataService.JSONQuizData[quiz.activeQuestion].selected}">
+                                      <img ng-src="{{answer.answerImage}}">
+                                    </p>
+                                    <p class="answer text-answer"
+                                      ng-class="{'bg-info': $index === quiz.dataService.JSONQuizData[quiz.activeQuestion].selected}">
+                                      <span>{{$index+1|character}}.</span>
+                                      {{answer.answer}}
+                                    </p>
+                                    <button class="btn btn-warning"
+                                      ng-click="quiz.questionAnswered() || quiz.selectAnswer($index)">
+                                        Submit
+                                    </button>
+                                  </li>
+
+                                </ul>
 
                                 <div class="answer-feedback" ng-show="quiz.feedback">
                                   <div class="title">
                                     <p>
                                       <span ng-show="quiz.dataService.JSONQuizData[quiz.activeQuestion].selected !== quiz.dataService.JSONCorrectAnswers[quiz.activeQuestion].number">Wrong:</span>
                                       <span ng-show="quiz.dataService.JSONQuizData[quiz.activeQuestion].selected === quiz.dataService.JSONCorrectAnswers[quiz.activeQuestion].number">Correct:</span>
-                                      The answer is {{quiz.dataService.JSONCorrectAnswers[quiz.activeQuestion].letter}}</p>
+                                      The answer is {{quiz.dataService.JSONCorrectAnswers[quiz.activeQuestion].letter}}
+                                    </p>
                                   </div>
                                   <p>{{quiz.dataService.JSONQuizData[quiz.activeQuestion].feedback}}</p>
                                   <button class="btn btn-warning"
@@ -185,27 +209,53 @@
                                   </md-content>
                                 </div>
 
-                                <div class="questions">
-                                  <h4>{{results.activeQuestion+1 + ". " + results.dataService.JSONQuizData[results.activeQuestion].text}}</h4>
-                                  <div class="answer-wrapper"
-                                    ng-if="results.dataService.JSONQuizData[results.activeQuestion].type === 'text'"
-                                    ng-repeat="answer in results.dataService.JSONQuizData[results.activeQuestion].possibilities">
-                                    <p class="answer text-answer"
-                                      ng-class="results.getAnswerClass($index)">
-                                      {{answer.answer}}
-                                      <span ng-show="$index !== results.quizMetrics.JSONCorrectAnswers[results.activeQuestion].number && $index === results.dataService.JSONQuizData[results.activeQuestion].selected">Your answer</span>
-                                      <span ng-show="$index === results.quizMetrics.JSONCorrectAnswers[results.activeQuestion].number">Correct answer</span>
-                                    </p>
-                                  </div>
+                                <div class="diagnostic-result" data-ng-repeat="score in results.dataService.JSONDiagnosticResult | filter:results.calculateDiagnosticScore()">
+                                  <h2>{{score.title}}</h2>
+                                  <img ng-src="{{score.image}}">
+                                  <p>{{score.description}}</p>
+                                </div>
 
-                                  <div class="answer-wrapper"
-                                    ng-if="results.dataService.JSONQuizData[results.activeQuestion].type === 'image'"
-                                    ng-repeat="answer in results.dataService.JSONQuizData[results.activeQuestion].possibilities">
-                                    <p class="answer image-answer"
-                                      ng-class="results.getAnswerClass($index)">
-                                      <img ng-src="{{answer.answer}}">
-                                    </p>
-                                  </div>
+                                <div class="questions">
+                                  <h4>{{results.activeQuestion+1 + ". " + results.dataService.JSONQuizData[results.activeQuestion].titleText}}</h4>
+                                  <img ng-if="results.dataService.JSONQuizData[results.activeQuestion].titleImage !== null"
+                                       ng-src="{{results.dataService.JSONQuizData[results.activeQuestion].titleImage}}">
+                                  
+                                  <ul class="answer-container">
+                                    <li class="answer-wrapper"
+                                      ng-if="results.dataService.JSONQuizData[results.activeQuestion].type === 'text'"
+                                      ng-repeat="answer in results.dataService.JSONQuizData[results.activeQuestion].possibilities">
+                                      <p class="answer text-answer"
+                                        ng-class="results.getAnswerClass($index)">
+                                        <span>{{$index+1|character}}.</span>
+                                        {{answer.answer}}
+                                        <span ng-show="$index !== results.quizMetrics.JSONCorrectAnswers[results.activeQuestion].number && $index === results.dataService.JSONQuizData[results.activeQuestion].selected">Your answer</span>
+                                        <span ng-show="$index === results.quizMetrics.JSONCorrectAnswers[results.activeQuestion].number">Correct answer</span>
+                                      </p>
+                                    </li>
+
+                                    <li class="answer-wrapper"
+                                      ng-if="results.dataService.JSONQuizData[results.activeQuestion].type === 'image'"
+                                      ng-repeat="answer in results.dataService.JSONQuizData[results.activeQuestion].possibilities">
+                                      <p class="answer image-answer"
+                                        ng-class="results.getAnswerClass($index)">
+                                        <img ng-src="{{answer.answerImage}}">
+                                      </p>
+                                    </li>
+
+                                    <li class="answer-wrapper"
+                                      ng-if="results.dataService.JSONQuizData[results.activeQuestion].type === 'image-text'"
+                                      ng-repeat="answer in results.dataService.JSONQuizData[results.activeQuestion].possibilities">
+                                      <p class="answer imagetext-answer"
+                                        ng-class="results.getAnswerClass($index)">
+                                        <img ng-src="{{answer.answerImage}}">
+                                      </p>
+                                      <p class="answer text-answer"
+                                        ng-class="{'bg-info': $index === quiz.dataService.JSONQuizData[quiz.activeQuestion].selected}">
+                                        <span>{{$index+1|character}}.</span>
+                                        {{answer.answer}}
+                                      </p>
+                                    </li>
+                                  </ul>
 
                                 </div>
 

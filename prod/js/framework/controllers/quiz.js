@@ -110,6 +110,12 @@
 		//Set the selected answer to the index of the question
 		function selectAnswer(index){
 			dataService.JSONQuizData[vm.activeQuestion].selected = index;
+
+			/*var selectedAnswer = dataService.JSONQuizData[vm.activeQuestion].selected = index;
+			selectedAnswer = index;
+
+			vm.answerArray.push(selectedAnswer);
+			window.alert(vm.answerArray);*/
 		}
 
 		//Reset everything
@@ -120,6 +126,7 @@
 			numQuestionsAnswered = 0;
 			vm.activeQuestion = 0;
 			quizMetrics.markQuiz();
+			quizMetrics.reviewQuiz();
 			quizMetrics.changeState('quiz', false);
 			//trigger the results page
 			quizMetrics.changeState('results', true);
@@ -158,7 +165,12 @@
 
 	angular
 		.module('quizFramework')
-		.controller('quizCtrl', QuizController);
+		.controller('quizCtrl', QuizController)
+		.filter('character',function(){
+	    return function(input){
+	        return String.fromCharCode(64 + parseInt(input,10));
+	    };
+		});
 
 	QuizController.$inject = ['quizMetrics', 'dataService'];
 

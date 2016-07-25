@@ -35,6 +35,48 @@
 			}
 		}
 
+		//calculate the number of each question answered to determine final output
+		function calculateDiagnosticScore(){
+			//Loop through all questions in JSON and match score to diagnostic score
+			var score = quizMetrics.answerArray;
+			var numberOfQuestions = [];
+			var matches = [];
+
+			for (var i = 0; i < dataService.JSONDiagnosticResult.length; i++) {
+				var matchedScore = dataService.JSONDiagnosticResult[i].score;
+				numberOfQuestions.push(matchedScore);
+
+				//console.log(numberOfQuestions);
+
+				for(var j = 0; j < score.length; j++){
+	        
+	        //If more than one score in the array then we have a tied score
+					if(score.length >= 2){
+						//console.log('MORE THAN 1');
+
+						//Show the last item in the JSON file
+						i = dataService.JSONDiagnosticResult.length -1;
+
+						return dataService.JSONDiagnosticResult[i].title,
+									 dataService.JSONDiagnosticResult[i].image,
+									 dataService.JSONDiagnosticResult[i].description;
+					}
+
+					//Else determine which final result to display
+	        else if(numberOfQuestions[i] === score[j]){
+	            matches.push(numberOfQuestions[i]);
+
+	            //console.log(score);
+
+	            return dataService.JSONDiagnosticResult[i].title,
+										 dataService.JSONDiagnosticResult[i].image,
+										 dataService.JSONDiagnosticResult[i].description;
+	        }
+	    	}
+
+			}
+		}
+
 		//Show score percentage
 		function calculatePerc(){
 			return quizMetrics.numCorrect / dataService.JSONQuizData.length * 100;
@@ -58,9 +100,14 @@
 		}
 
 		function reset(){
-			quizMetrics.changeState('results', false);
+			quizMetrics.changeState('results', false); 
 			//Reset the number of question corrects as we are startin again.
 			quizMetrics.numCorrect = 0;
+			quizMetrics.answerCount = null;
+			quizMetrics.answerArray = [];
+			quizMetrics.answermax = null,
+			quizMetrics.answerResult = {},
+			quizMetrics.duplicateResults = [];
 
 			//Loop through all questions in JSON and reset all flags back to default
 			for(var i = 0; i < dataService.JSONQuizData.length; i++){
@@ -79,6 +126,7 @@
 		vm.calculatePerc = calculatePerc;
 		vm.calculateScoreTagline = calculateScoreTagline;
 		vm.calculateScoreDescription = calculateScoreDescription;
+		vm.calculateDiagnosticScore = calculateDiagnosticScore;
 		vm.activeQuestion = 0;
 
 	}
