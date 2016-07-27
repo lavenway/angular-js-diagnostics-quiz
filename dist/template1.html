@@ -50,10 +50,8 @@
                         <div id="quiz-wrapper">
                               <div ng-controller="listCtrl as list" ng-hide="list.quizMetrics.quizActive || list.quizMetrics.resultsActive">
 
-                                <button class="btn btn-warning" ng-click="list.activateQuiz()">Start Quiz</button>
-
                                 <div class="landing">
-                                  QUIZ LANDING SCREEN
+                                  <button class="btn btn-warning" ng-click="list.activateQuiz()">Start Quiz</button>
                                 </div>
 
                               </div><!-- LIST CONTROLLER -->
@@ -190,7 +188,7 @@
                                   </button>
                                 </div>
 
-                                <div>
+                                <div class="carousel">
                                   <md-content>
                                     <md-tabs>
                                       <md-tab label="Results">
@@ -215,7 +213,7 @@
                                   <p>{{score.description}}</p>
                                 </div>
 
-                                <div class="questions">
+                                <div class="review-questions">
                                   <h4>{{results.activeQuestion+1 + ". " + results.dataService.JSONQuizData[results.activeQuestion].titleText}}</h4>
                                   <img ng-if="results.dataService.JSONQuizData[results.activeQuestion].titleImage !== null"
                                        ng-src="{{results.dataService.JSONQuizData[results.activeQuestion].titleImage}}">
