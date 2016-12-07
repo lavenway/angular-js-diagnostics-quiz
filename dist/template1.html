@@ -116,6 +116,7 @@
                                     ng-repeat="answer in quiz.dataService.JSONQuizData[quiz.activeQuestion].possibilities">
                                     <p class="answer image-answer"
                                       ng-class="{'image-selected': $index === quiz.dataService.JSONQuizData[quiz.activeQuestion].selected}">
+                                      <span>{{$index+1|character}}.</span>
                                       <img ng-src="{{answer.answerImage}}">
                                     </p>
                                     <button class="btn btn-warning"
